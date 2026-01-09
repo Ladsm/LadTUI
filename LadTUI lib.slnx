@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="LadTUI lib/LadTUI lib.vcxproj" Id="b3004ce7-e2b1-4fc3-aded-212cefe70b4f" />
+</Solution>
