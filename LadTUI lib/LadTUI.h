@@ -7,8 +7,9 @@ namespace ladtui {
 	class Menu {
 	public:
 		int sizeOfItems = 0;
-		void DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems);
-		void MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems);
+		void DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems, int type);
+		void MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems, int type);
+		void drawLineRight();
 	};
 	class Text {
 	public:
