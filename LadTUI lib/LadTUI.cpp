@@ -99,7 +99,7 @@ namespace ladtui {
 		}
 	}
 
-	void Menu::drawLineRight() {
+	void drawLineRight() {
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		int LineHorizontal;
 		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -139,5 +139,56 @@ namespace ladtui {
 		std::wcout << pipeDL << '\n';
 		_setmode(_fileno(stdout), prevMode);
 		return;
+	}
+
+	void Switch::displaySwitch(Switch stuff)
+	{
+		HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(color, 7);
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		GetConsoleScreenBufferInfo(color, &csbi);
+		COORD start_pos = csbi.dwCursorPosition;
+		const wchar_t* OnStr = L"▓▒░";
+		const wchar_t* OffStr = L"░▒";
+		int originalMode = _setmode(_fileno(stdout), _O_U16TEXT);
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		std::wcout << stuff.nametoswitch.c_str() << L'\n';
+		if (stuff.onOrOff == true) {
+			SetConsoleTextAttribute(hConsole, 240);
+			std::wcout << L"ON";
+			SetConsoleTextAttribute(hConsole, 7);
+			std::wcout << OnStr << L'\r';
+		}
+		else {
+			std::wcout << OffStr;
+			SetConsoleTextAttribute(hConsole, 240);
+			std::wcout << L"OFF" << L'\r';
+			SetConsoleTextAttribute(hConsole, 7);
+		}
+		_setmode(_fileno(stdout), originalMode);
+		SetConsoleCursorPosition(color, start_pos);
+		std::cout << std::flush;
+		return;
+	}
+	void Switch::switchSwitch(Switch stuff) {
+		int keypressed = 0;
+		while (true) {
+			displaySwitch(stuff);
+			keypressed = _getch();
+			if (keypressed == 0 || keypressed == 0xE0) {
+				keypressed = _getch();
+				switch (keypressed) {
+				case 75: // left
+					stuff.onOrOff = true;
+					break;
+				case 77: // right
+					stuff.onOrOff = false;
+					break;
+				}
+			}
+			else {
+				return;
+			}
+		}
 	}
 }
