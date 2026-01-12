@@ -24,15 +24,15 @@ namespace ladtui {
 	};
 	class Switch {
 	public:
-		bool onOrOff = false;
+		// Change members from references to value types
+		std::function<void()> OFF;
+		std::function<void()> ON;
 		std::string nametoswitch;
-		const std::function<void()>& OFF;
-		const std::function<void()>& ON;
+		bool onOrOff;
 		void displaySwitch(Switch stuff);
 		void switchSwitch(Switch stuff);
 		Switch(std::string x, std::function<void()> y, std::function<void()> z, bool defaultstate)
 			: nametoswitch(x), OFF(y), ON(z), onOrOff(defaultstate) {
 		}
 	};
-
 }

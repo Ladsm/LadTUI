@@ -15,24 +15,6 @@
 #include <iomanip>
 
 namespace ladtui {
-	static void ClearConsole()
-	{
-		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		if (hOut == INVALID_HANDLE_VALUE) return;
-
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		if (!GetConsoleScreenBufferInfo(hOut, &csbi)) return;
-
-		DWORD cellCount = static_cast<DWORD>(csbi.dwSize.X) * csbi.dwSize.Y;
-		DWORD count = 0;
-		COORD homeCoords = { 0, 0 };
-
-		FillConsoleOutputCharacterA(hOut, ' ', cellCount, homeCoords, &count);
-		FillConsoleOutputAttribute(hOut, csbi.wAttributes, cellCount, homeCoords, &count);
-		SetConsoleCursorPosition(hOut, homeCoords);
-	}
-
-
 	const int MENU_ITEM_WIDTH = 20;
 
 	void Menu::DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems, int type) {
@@ -187,7 +169,16 @@ namespace ladtui {
 				}
 			}
 			else {
-				return;
+				if (keypressed == '\r') {
+					if (stuff.onOrOff == true) {
+						stuff.ON();
+						return;
+					}
+					else {
+						stuff.OFF();
+						return;
+					}
+				}
 			}
 		}
 	}
