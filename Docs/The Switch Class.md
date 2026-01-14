@@ -18,8 +18,8 @@ The values are: name of switch(the thing that will be displayed over the switch)
 ```cpp
 ladtui::Switch(
 "test",
-[]() { func1(); },
-[]() { func2(); },
+[]() { std::cout << "Switch off\n" },
+[]() { std::cout << "Switch on\n" },
 1
 );
 ```
