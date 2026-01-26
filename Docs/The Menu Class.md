@@ -32,19 +32,8 @@ std::vector<std::function<void()>> MenuTest = {
 };
 ```
 
-After all this, call menu.MenuMenu. The peramiters are : Sting array, list of functions, langth of the string array and type  
-There are two types of menus; 1, adds an arrow to the side of the item thats picked. 2 highlights items in white and 3 is a mix of the two.
+After all this, call menu.MenuMenu. The peramiters are : Sting array, list of functions and langth of the string array.
 
 ```cpp
-menu.MenuMenu(items, MenuTest, 5, 1);
-```
-
-This is how the menu looks:
-
-```cpp
-->One
-   Two
-   Three
-   Four
-   Five
+menu.MenuMenu(items, MenuTest, 5);
 ```

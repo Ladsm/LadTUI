@@ -5,16 +5,14 @@
 
 namespace ladtui {
 	void DisplayTh3B3stD3v3lop3r();
-	void drawLineRight();
 	int intrandnum(int first, int last);
 	class Menu {
 	public:
 		int sizeOfItems = 0;
-		void DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems, int type);
-		void MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems, int type);
+		void DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems);
+		void MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems);
 		Menu() = default;
 	};
-	void drawLineRight();
 	class Text {
 	public:
 		std::string text = "";
@@ -37,5 +35,14 @@ namespace ladtui {
 		Switch(std::string x, std::function<void()> y, std::function<void()> z, bool defaultstate)
 			: nametoswitch(x), OFF(y), ON(z), onOrOff(defaultstate) {
 		}
+	};
+	class consoleUtils {
+	public:
+		int getConsoleWidth();
+		int getConsoleHeight();
+		void drawLineRight();
+		void BackgroundDraw(int color);
+		void CursorUp(int TimesToGoUp);
+		void CursorDown(int TimesToGoDown);
 	};
 }

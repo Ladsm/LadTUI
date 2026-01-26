@@ -35,57 +35,32 @@ namespace ladtui {
 		std::wcout << Lines;
 		(void)_setmode(_fileno(stdout), prevMode);
 	}
-	void drawLineRight() {
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		int LineHorizontal;
-		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-		LineHorizontal = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-		int prevMode = _setmode(_fileno(stdout), _O_U16TEXT);
-		for (int i = 0; i < LineHorizontal; i++) {
-			std::wcout << L'─';
-		}
-		(void)_setmode(_fileno(stdout), prevMode);
-		std::cout << '\n';
-	}
 	int intrandnum(int first, int last) {
 		std::random_device rd;
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<int> distrib(first, last);
 		return distrib(gen);
 	}
-	void Menu::DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems, int type) {
+	void Menu::DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems) {
+		consoleUtils Tils;
 		HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(color, 7);
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		GetConsoleScreenBufferInfo(color, &csbi);
-		COORD start_pos = csbi.dwCursorPosition;
 		for (int i = 0; i < amountofItems; ++i) {
-			SetConsoleTextAttribute(color, 7);
 			std::string prefix = "  ";
 			if ((i + 1) == WhatsSelected) {
 				prefix = "->";
-				if (type == 2) {
-					prefix = "";
-				} if (type == 2 || type == 3) {
-					SetConsoleTextAttribute(color, 240);
-				}
-			}
-			if (type == 2) {
-				prefix = "";
 			}
 			std::string output = prefix + ItemsToShow[i];
 			std::cout << std::left << std::setw(MENU_ITEM_WIDTH + 2) << output << '\n';
-
-			SetConsoleTextAttribute(color, 7);
 		}
-		SetConsoleCursorPosition(color, start_pos);
+		Tils.CursorUp(amountofItems);
 		std::cout << std::flush;
 	}
-	void Menu::MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems, int type) {
+	void Menu::MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems) {
+		consoleUtils Tils;
 		int selected = 1;
 		int keypressed = 0;
 		while (true) {
-			DisplayMenu(ItemsToUse, selected, amountofItems, type);
+			DisplayMenu(ItemsToUse, selected, amountofItems);
 			keypressed = _getch();
 			if (keypressed == 0 || keypressed == 0xE0) {
 				keypressed = _getch();
@@ -108,6 +83,7 @@ namespace ladtui {
 					if (idx >= 0 && idx < static_cast<int>(callbacks.size()) && callbacks[idx]) {
 						callbacks[idx]();
 					}
+					Tils.CursorDown(amountofItems);
 					return;
 				}
 			}
@@ -145,29 +121,21 @@ namespace ladtui {
 	}
 	void Switch::displaySwitch(Switch stuff)
 	{
-		HANDLE color = GetStdHandle(STD_OUTPUT_HANDLE);
-		SetConsoleTextAttribute(color, 7);
-		CONSOLE_SCREEN_BUFFER_INFO csbi;
-		GetConsoleScreenBufferInfo(color, &csbi);
-		COORD start_pos = csbi.dwCursorPosition;
+		consoleUtils Tils;
 		const wchar_t* OnStr = L"▓▒░";
 		const wchar_t* OffStr = L"░▒";
 		int originalMode = _setmode(_fileno(stdout), _O_U16TEXT);
 		std::wcout << stuff.nametoswitch.c_str() << L'\n';
 		if (stuff.onOrOff == true) {
-			SetConsoleTextAttribute(color, 240);
 			std::wcout << L"ON";
-			SetConsoleTextAttribute(color, 7);
 			std::wcout << OnStr << L'\n';
 		}
 		else {
 			std::wcout << OffStr;
-			SetConsoleTextAttribute(color, 240);
 			std::wcout << L"OFF" << L'\n';
-			SetConsoleTextAttribute(color, 7);
 		}
 		(void)_setmode(_fileno(stdout), originalMode);
-		SetConsoleCursorPosition(color, start_pos);
+		Tils.CursorUp(2);
 		std::cout << std::flush;
 		return;
 	}
@@ -201,6 +169,135 @@ namespace ladtui {
 					}
 				}
 			}
+		}
+	}
+	int consoleUtils::getConsoleWidth() {
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+			int width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+			return width;
+		}
+		else {
+			std::cout << "cry about it lol\n";
+			return 0;
+		}
+	}
+	int consoleUtils::getConsoleHeight() {
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+			int height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+			return height;
+		}
+		else {
+			std::cout << "cry about it lol\n";
+			return 0;
+		}
+	}
+	void consoleUtils::drawLineRight() {
+		int prevMode = _setmode(_fileno(stdout), _O_U16TEXT);
+		for (int i = 0; i < getConsoleWidth(); i++) {
+			std::wcout << L'─';
+		}
+		(void)_setmode(_fileno(stdout), prevMode);
+		std::cout << '\n';
+	}
+	void consoleUtils::BackgroundDraw(int color) {
+		HANDLE ColoR = GetStdHandle(STD_OUTPUT_HANDLE);
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		GetConsoleScreenBufferInfo(ColoR, &csbi);
+		COORD start_pos = csbi.dwCursorPosition;
+
+	 /* okay, im sorry for useing comments but its needed here due to MADIC NUMBERS and how weird the code looks.
+		Theres no good way I can find to make this better, I dont want to make a wall of vars
+		and enums wont work here, sorry :(.					-Ladsm */
+		switch (color) { // background draw
+		   /* Format: <Background color>-<draw-On color> */
+		case 1:
+			SetConsoleTextAttribute(ColoR, 0); //Black-White
+			break;
+		case 2:
+			SetConsoleTextAttribute(ColoR, 255); //White-Black
+			break;
+		case 3:
+			SetConsoleTextAttribute(ColoR, 17); //Blue Dark-White
+			break;
+		case 4:
+			SetConsoleTextAttribute(ColoR, 51); //Cyan-White
+			break;
+		case 5:
+			SetConsoleTextAttribute(ColoR, 238); //Yellow-Red / HOYTDAWG
+			break;
+		case 6:
+			SetConsoleTextAttribute(ColoR, 153); //Blue Bright-White
+			break;
+		case 7:
+			SetConsoleTextAttribute(ColoR, 221); //Pink-White
+			break;
+		default:
+			SetConsoleTextAttribute(ColoR, 0); //Black-White
+			break;
+		}
+
+		int prevMode = _setmode(_fileno(stdout), _O_U16TEXT);
+		for (int i = 0; i < getConsoleHeight(); i++) {
+			for (int i = 0; i < getConsoleWidth(); i++) {
+				std::wcout << L'█';
+			}
+			std::wcout << L'\n';
+		}
+		(void)_setmode(_fileno(stdout), prevMode);
+		SetConsoleCursorPosition(ColoR, start_pos);
+		std::cout << std::flush;
+
+		switch (color) { // draw on background
+		case 1:
+			SetConsoleTextAttribute(ColoR, 7); //Black-White
+			break;
+		case 2:
+			SetConsoleTextAttribute(ColoR, 240); //White-Black
+			break;
+		case 3:
+			SetConsoleTextAttribute(ColoR, 31); //Blue Dark-White
+			break;
+		case 4:
+			SetConsoleTextAttribute(ColoR, 63); //Cyan-White
+			break;
+		case 5:
+			SetConsoleTextAttribute(ColoR, 228); //Yellow-Red / HOYTDAWG
+			break;
+		case 6:
+			SetConsoleTextAttribute(ColoR, 159); //Blue Bright-White
+			break;
+		case 7:
+			SetConsoleTextAttribute(ColoR, 223); //Pink-White
+			break;
+		default:
+			SetConsoleTextAttribute(ColoR, 7); //Black-White
+			break;
+		}
+	}
+	void consoleUtils::CursorUp(int TimesToGoUp) {
+		HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		if (GetConsoleScreenBufferInfo(hStdout, &csbi)) {
+			for (int i = 0; i < TimesToGoUp; i++) {
+				csbi.dwCursorPosition.Y--;
+			}
+			csbi.dwCursorPosition.X = 0;
+			SetConsoleCursorPosition(hStdout, csbi.dwCursorPosition);
+		}
+	}
+	void consoleUtils::CursorDown(int TimesToGoDown) {
+		HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		if (GetConsoleScreenBufferInfo(hStdout, &csbi)) {
+			for (int i = 0; i < TimesToGoDown; i++) {
+				csbi.dwCursorPosition.Y++;
+			}
+			csbi.dwCursorPosition.X = 0;
+			SetConsoleCursorPosition(hStdout, csbi.dwCursorPosition);
 		}
 	}
 }
