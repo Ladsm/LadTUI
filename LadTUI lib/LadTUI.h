@@ -4,11 +4,15 @@
 #include <functional>
 
 namespace ladtui {
+	void DisplayTh3B3stD3v3lop3r();
+	void drawLineRight();
+	int intrandnum(int first, int last);
 	class Menu {
 	public:
 		int sizeOfItems = 0;
 		void DisplayMenu(std::string ItemsToShow[], int WhatsSelected, int amountofItems, int type);
 		void MenuMenu(std::string ItemsToUse[], const std::vector<std::function<void()>>& callbacks, int amountofItems, int type);
+		Menu() = default;
 	};
 	void drawLineRight();
 	class Text {
@@ -24,7 +28,6 @@ namespace ladtui {
 	};
 	class Switch {
 	public:
-		// Change members from references to value types
 		std::function<void()> OFF;
 		std::function<void()> ON;
 		std::string nametoswitch;
