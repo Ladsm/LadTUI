@@ -40,3 +40,8 @@ Moves the Cursor up or down.
 
 Returns an int of the size of the console window.  
 It was mainly made for the libary itself so you wont use it that much.
+
+### FullScreen()
+
+Full Screens the console(This is bad, dont do this).
+

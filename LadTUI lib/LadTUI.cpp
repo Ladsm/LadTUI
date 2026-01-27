@@ -17,8 +17,6 @@
 #include <limits>
 
 namespace ladtui {
-	const int MENU_ITEM_WIDTH = 10;
-
 	void DisplayTh3B3stD3v3lop3r() {
 	  std::wstring L1 = L"\n ▄█        ▄████████ ███████▄     ▄████████    ▄▄▄▄███▄▄▄▄    \n";
 		std::wstring L2 = L"███        ███   ███ ███  ▀███   ███    ███  ▄██▀▀▀███▀▀▀██▄  \n";
@@ -50,7 +48,7 @@ namespace ladtui {
 				prefix = "->";
 			}
 			std::string output = prefix + ItemsToShow[i];
-			std::cout << std::left << std::setw(MENU_ITEM_WIDTH + 2) << output << '\n';
+			std::cout << std::left << output << '\n';
 		}
 		Tils.CursorUp(amountofItems);
 		std::cout << std::flush;
@@ -299,5 +297,11 @@ namespace ladtui {
 			csbi.dwCursorPosition.X = 0;
 			SetConsoleCursorPosition(hStdout, csbi.dwCursorPosition);
 		}
+	}
+	void consoleUtils::FullScreen() {
+		keybd_event(VK_MENU, 0, 0, 0);//Alt Down
+		keybd_event(VK_RETURN, 0, 0, 0);//Enter Down
+		keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);//Enter Up
+		keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0);//Alt up
 	}
 }

@@ -44,5 +44,6 @@ namespace ladtui {
 		void BackgroundDraw(int color);
 		void CursorUp(int TimesToGoUp);
 		void CursorDown(int TimesToGoDown);
+		void FullScreen();
 	};
 }
