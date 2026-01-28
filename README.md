@@ -8,7 +8,7 @@ Ladtui is a simple and **lightwaight framework** aimed at **small-medium** proje
 
 ### Why should I use LadTUI?
 
-Ladtui was made mainly for small projects who need large frameworks or dont want to write boilerplate and just want to get on with it.
+Ladtui was made mainly for small projects who dont need large frameworks or dont want to write boilerplate and just want to get on with it.
 
 ## How to set up
 
