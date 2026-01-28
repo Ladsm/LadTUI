@@ -45,5 +45,12 @@ namespace ladtui {
 		void CursorUp(int TimesToGoUp);
 		void CursorDown(int TimesToGoDown);
 		void FullScreen();
+		void DelaySeconds(int seconds);
+		void ClearScreen();
+	};
+	class NumericUpDown {
+	public:
+		void displayNumupdown(int currentNumber);
+		int useNumupdown();
 	};
 }

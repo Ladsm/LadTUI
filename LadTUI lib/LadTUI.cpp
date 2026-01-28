@@ -207,6 +207,7 @@ namespace ladtui {
 		GetConsoleScreenBufferInfo(ColoR, &csbi);
 		COORD start_pos = csbi.dwCursorPosition;
 
+		system("cls");
 	 /* okay, im sorry for useing comments but its needed here due to MADIC NUMBERS and how weird the code looks.
 		Theres no good way I can find to make this better, I dont want to make a wall of vars
 		and enums wont work here, sorry :(.					-Ladsm */
@@ -303,5 +304,46 @@ namespace ladtui {
 		keybd_event(VK_RETURN, 0, 0, 0);//Enter Down
 		keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);//Enter Up
 		keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0);//Alt up
+	}
+	void consoleUtils::DelaySeconds(int seconds) {
+		seconds = seconds * 1000;
+		Sleep(seconds);
+		return;
+	}
+	void consoleUtils::ClearScreen() {
+		system("cls");
+	}
+	void NumericUpDown::displayNumupdown(int currentNumber) {
+		int originalMode = _setmode(_fileno(stdout), _O_U16TEXT);
+		std::wcout << L"              \r";
+		std::wcout << currentNumber << L"\r";
+		(void)_setmode(_fileno(stdout), originalMode);
+		std::cout << std::flush;
+		return;
+	}
+	int NumericUpDown::useNumupdown() {
+		int NuberToChange = 0;
+		int keypressed = 0;
+		while (true) {
+			displayNumupdown(NuberToChange);
+			keypressed = _getch();
+			if (keypressed == 0 || keypressed == 0xE0) {
+				keypressed = _getch();
+				switch (keypressed) {
+				case 72: // up
+					NuberToChange++;
+					break;
+				case 80: // down
+					NuberToChange--;
+					break;
+				}
+			}
+			else {
+				if (keypressed == '\r') {
+					std::cout << '\n';
+					return NuberToChange;
+				}
+			}
+		}
 	}
 }

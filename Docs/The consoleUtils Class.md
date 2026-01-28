@@ -45,3 +45,10 @@ It was mainly made for the libary itself so you wont use it that much.
 
 Full Screens the console(This is bad, dont do this).
 
+### DelaySeconds(int amountOfTimeToWaitSeconds)
+
+Like Sleep but in seconds and not miliseconds.
+
+### ClearScreen()
+
+Clears the console(just a wrapper for system("cls").
