@@ -1,3 +1,7 @@
+/*
+This example shows some cool things ladtui is able to do like:
+Menu, NumericUpDown and consoleUtils.
+*/
 #include "LadTUI.h"
 #include <iostream>
 
@@ -55,4 +59,5 @@ start:
 	tils.DelaySeconds(1);
 	goto start;
 	return 0;
+
 }
