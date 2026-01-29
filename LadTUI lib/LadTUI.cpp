@@ -92,12 +92,6 @@ namespace ladtui {
 		std::cout << TeXt;
 	}
 	void Text::outboxed(std::string TeXt) {
-		const wchar_t pipeUR = L'╔';
-		const wchar_t pipeUL = L'╗';
-		const wchar_t pipeDR = L'╚';
-		const wchar_t pipeDL = L'╝';
-		const wchar_t pipeLH = L'═';
-		const wchar_t pipeLD = L'║';
 		int prevMode = _setmode(_fileno(stdout), _O_U16TEXT);
 		std::wcout << pipeUR;
 		for (size_t i = 0; i < TeXt.size(); i++) {
@@ -117,8 +111,12 @@ namespace ladtui {
 		(void)_setmode(_fileno(stdout), prevMode);
 		return;
 	}
-	void Switch::displaySwitch(Switch stuff)
-	{
+	std::string Text::GetString() {
+		std::string TeXt = "";
+		std::getline(std::cin >> std::ws, TeXt);
+		return TeXt;
+	}
+	void Switch::displaySwitch(Switch stuff) {
 		consoleUtils Tils;
 		const wchar_t* OnStr = L"▓▒░";
 		const wchar_t* OffStr = L"░▒";

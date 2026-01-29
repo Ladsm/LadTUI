@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include <functional>
@@ -14,11 +14,19 @@ namespace ladtui {
 		Menu() = default;
 	};
 	class Text {
+	private:
+		const wchar_t pipeUR = L'╔';
+		const wchar_t pipeUL = L'╗';
+		const wchar_t pipeDR = L'╚';
+		const wchar_t pipeDL = L'╝';
+		const wchar_t pipeLH = L'═';
+		const wchar_t pipeLD = L'║';
 	public:
 		std::string text = "";
 		size_t lengthOfString = text.size();
 		void out(std::string TeXt);
 		void outboxed(std::string TeXt);
+		std::string GetString();
 		Text() = default;
 		Text(std::string x) {
 			text = x;

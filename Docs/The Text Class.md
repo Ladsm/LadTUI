@@ -1,4 +1,4 @@
-# The Text Class
+﻿# The Text Class
 
 ## Info
 
@@ -19,8 +19,23 @@ The only value you have to set is the string text;
 text = ladtui::Text("text");
 ```
 
-After all this, call text.out or one of the variants.
+After all this, call one of Text's functions, heres a list:
+
+### out/outboxed(string textToPrintOut)
+
+prints the passed string.
+If outboxed is used it will print the text in a box like this:
+
+```sh
+╔═══════╗
+║Example║
+╚═══════╝
+```
+
+### GetString()
+
+Wraper for std::getline, that returns a string. Example on how to use it:
 
 ```cpp
-text.out(text.text)
+ladtui::Text text = (text.GetString());
 ```
